@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>T3 Code · 复盘与真实验收</title><style>
+:root{color-scheme:light;--ink:#142a30;--muted:#536970;--line:#d8e4e2;--green:#11694f}*{box-sizing:border-box}body{margin:0;background:#f3f7f5;color:var(--ink);font:16px/1.75 system-ui,-apple-system,sans-serif}main{max-width:1120px;margin:auto;padding:48px 24px 64px}header{border-top:5px solid var(--green);padding:28px 0}h1{font-size:clamp(30px,5vw,48px);line-height:1.2;margin:8px 0 18px}h2{font-size:24px;margin:0 0 16px}h3{font-size:18px}p{margin:10px 0}.eyebrow{color:var(--green);font-weight:700;letter-spacing:.08em}.muted{color:var(--muted)}section,details{background:white;border:1px solid var(--line);border-radius:14px;padding:24px;margin:20px 0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.stat{padding:22px;background:#e3f1e9;border-radius:12px}.stat strong{display:block;font-size:32px;line-height:1.3}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;min-width:700px;font-size:14px}th,td{padding:15px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}th{background:#eef4f1}td:first-child{font-weight:700;width:16%}summary{font-weight:700;cursor:pointer}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.7 ui-monospace,monospace;background:#f3f6f5;padding:18px;border-radius:8px}a{color:var(--green)}.note{border-left:4px solid #d29a38;padding-left:16px}.pill{display:inline-block;padding:4px 12px;border-radius:30px;background:#e3f1e9;color:var(--green);font-size:14px;font-weight:700}@media(max-width:650px){main{padding:24px 14px}.stats{grid-template-columns:1fr}section,details{padding:18px}}@media print{body{background:white}main{max-width:none;padding:0}section,details{break-inside:avoid}.scroll{overflow:visible}table{min-width:0}}
+</style></head><body><main><header><div class="eyebrow">T3 Code · 设置与验收手册</div><h1>不止启动成功，<br>把恢复与真实使用分开验。</h1><p class="muted">2026年11月24日 · 所有时间为北京时间（UTC+8）</p><span class="pill">受控恢复与十分钟采样已完成</span><p>已推进真实守护进程恢复、已认证请求、WebSocket、冷暖浏览器与 T3 模型服务 验证；下面同时列出实测结果与尚未测到的范围，不以未知项代替行动。</p></header>
+<div class="stats"><div class="stat"><strong>17.239s</strong>专用守护进程 重启恢复</div><div class="stat"><strong>84/84</strong>会话 / HTML / JS / CSS 检查成功</div><div class="stat"><strong>11/11</strong>采样内 WebSocket 101</div></div>
+<section><h2>六个问题，如何解决、如何分诊</h2><div class="scroll"><table><thead><tr><th>问题</th><th>如何解决</th><th>先查什么</th><th>通过标准</th></tr></thead><tbody><tr><td>休眠后连接停滞</td><td>对专用守护进程 做受控重启，17.239s 恢复；Funnel、T3 进程及原诊断登录保持。</td><td>实例归属 → 持久 状态目录／状态文件／套接字 → 控制连接；只修自己的实例。</td><td>在线状态与已认证路径恢复，再做有界连续采样，不把进程重启叫整机唤醒。</td></tr><tr><td>HTTP200但卡 logo</td><td>补做真实暖启动及新原生无痕浏览器验证，均观察到配对页。</td><td>资源 → 初始化／API → 冷暖 请求瀑布图及控制台；对齐日志时间，别只刷新。</td><td>真实可交互 UI，不以 200 代替可用；冷启动缺 请求瀑布图 的边界如实保留。</td></tr><tr><td>远程桌面看不到配对链接</td><td>改用 原生工具 CopyFromBox，将私密 HTML 直接交付用户 Mac。</td><td>确认目标设备与复制工具实际落盘位置；声称前台显示前先安全截图核实。</td><td>报告实际文件路径和有效期；秘密链接不进聊天、截图、二维码或第三方粘贴服务，不消费用户码。</td></tr><tr><td>agy 命令行成功但ACP未认证</td><td>对齐 T3 隔离 认证配置目录、GEMINI_HOME 与文件存储配置，在正确环境登录。</td><td>先发现版本/help/驱动与 MCP；核对 gemini-dir、app-data-dir，保留 Codex。</td><td>T3 内真实任务已完成（completed） 且输出可核验；命令行成功不能替代。</td></tr><tr><td>首次授权进入默认环境</td><td>将必要的官方登录定位到 T3 实际隔离环境，避免再登默认 HOME。</td><td>先隔离目录再授权；确认是否真的缺认证，不复制 访问令牌、不绕隔离。</td><td>官方授权退出成功并验证目标实例；不要求聊天传码，不无谓重复授权。</td></tr><tr><td>局部成功误报全部完成</td><td>分层验证到会话、资源、WS、模型服务输出，并记录用户确认。</td><td>域名解析／TLS／静态资源 → 浏览器 → 会话 → Origin/cookie/WebSocket → 模型服务 → 用户终端。</td><td>所选模型（selected）不等于实际执行模型（executed）；输出、模型身份、短期稳定性与真实整机休眠分别陈述。</td></tr></tbody></table></div></section>
+<section><h2>真实测试记录</h2><h3>09:53 · 受控恢复</h3><p>09:53:11.792 建立基线，09:53:31.480 已记录恢复。专用守护进程 受控重启后恢复耗时 <b>17.239秒</b>。Funnel 配置前后一致，T3 进程未变，原诊断登录仍有效；没有消费用户配对码。</p>
+<h3>09:53:35.838—10:03:34.804 · 十分钟连续采样</h3><ul><li>按30秒计划间隔采样，共21次；请求执行使记录时间有少量偏移。在线 <b>21/21</b>。</li><li>会话 API、HTML、JS、CSS 各 <b>21/21</b>，合计 <b>84/84</b>；authenticated=true 为 <b>21/21</b>。</li><li>JS 与 CSS 哈希匹配各 <b>21/21</b>；WebSocket 101 为 <b>11/11</b>（不是每个样本都测WS）。</li><li>会话 API 延迟中位数 <b>0.283s</b>，最大 <b>1.507s</b>。</li><li>10:03:35.673 完成收尾，专用诊断 会话 已撤销。</li></ul>
+<h3>09:54—09:55 · 真实浏览器暖启动</h3><p>两次到达配对页，分别 <b>1.283s / 1.071s</b>；本轮暖启动没有 页面错误。</p>
+<h3>09:57 · 新原生无痕浏览器</h3><p>09:57:05.310 开始，09:57:11.734 仍在加载，09:57:16.286 确认配对页。由观察记录得到耗时<b>上界10.976s</b>，不是精确首屏计时。没有捕获本轮冷启动请求瀑布图，不能声称冷启动无错误，也不能据此完全解释过去卡 logo 的原因。</p>
+<h3>09:41 · T3 内 模型服务任务；09:47 · 用户确认</h3><p>T3 中选择 <code>antigravity / gemini-4-neon-low</code>，任务状态为已完成（completed），实际输出 <code>T3_ANTIGRAVITY_VERIFIED sum=423</code>。这是任务完成与输出的证据；<b>所选模型（selected）不等于实际执行模型（executed）</b>，executedModel 为空，未据此证明实际执行模型身份。09:47 用户已确认「all set」。</p>
+<p class="note"><b>范围边界：</b>实际整机休眠未执行，不能用 守护进程重启冒充 整机休眠／恢复；十分钟成功也不是无限期稳定保证。继续验证应保留检查点，在自然恢复或获准窗口复测，不强制休眠共享宿主。历史 splash 初因与冷启动精确 请求瀑布图 仍需针对性证据。</p></section>
+<section><h2>可复用执行顺序</h2><p>发现已有服务与官方版本/help → 确认归属与持久化路径 → 小范围可逆修复 → 分开冷暖浏览器 → 合法会话与正确 来源／协议／会话凭据、WS101 → T3 completed 输出 → 用户终端确认。</p><p>遇未知项，制定下一项有界实验、采样窗口与回退，不只留下 待验证；遇安全阻断则停对应分支，不关 TLS/认证、不提取 访问令牌、不绕过平台限制。</p></section>
+<details><summary>早期 演练 评测：流程覆盖，不是实网验收</summary><div class="scroll"><table><thead><tr><th>原草稿场景</th><th>使用技能</th><th>不使用技能</th></tr></thead><tbody><tr><td>网络场景</td><td>8/8</td><td>2/8</td></tr><tr><td>隔离连接场景</td><td>7/10</td><td>3/10</td></tr></tbody></table></div><p>基线输出 继承父会话，并非严格上下文隔离；仅文字计划覆盖，不是安装/网络/稳定性实测。复合断言缺一项就失败，未陈述不等于已做危险动作。后续修订版未重评，不能称当前技能100%通过。上述真实运行数据与此 演练 评分是两类不同证据。</p></details>
+<details><summary>正式保存的技能正文与下载</summary><p><a href="SKILL.md" download="SKILL.md">下载 SKILL.md</a> · 中文通用执行技能；保留必要产品名称、命令和配置字段，解释均为中文。</p><pre>---
+name: set-up-T3code-in-grokbot
+description: 在 Grok Bot 安装、配置、排查或验收 T3 Code 时使用；涵盖手机卡启动标志、网页返回成功但应用未就绪、Tailscale 休眠离线、私密配对交付，以及 Antigravity 命令行成功但隔离连接未认证；要求安全修复、真实冷暖浏览器和端到端验证。
+---
+
+# 在 Grok Bot 中设置 T3 Code
+
+## 目标与执行模式
+在 Grok Bot 中安装、配置、排查和验证 T3 Code、远程配对、Tailscale 与 Antigravity ACP。正式执行时，在授权范围内主动修复并实测，不以列出未知项代替推进；只有用户要求演练模式时，才只据材料推演，禁止实际诊断、服务变更、登录和官方授权。
+
+从调用上下文确认目标设备、授权和运行偏好。若上下文要求 仅操作工作机，就只操作 工作机，不运行 Mac 命令、不使用 CloudAgent；其他环境需要相应明确授权，不能把单次偏好当成全局不可改规则。保留其他实例和 Codex 配置。
+
+## 一、安装前检查与能力发现
+1. 先发现可用且获授权的 MCP／原生工具，读取所需工具 参数结构，再使用其真实支持能力；区分不可用、缺权限和普通参数/版本错误。
+2. 盘点已存在的服务、进程所属者、启动器、版本、端口、非秘密配置及现有认证状态，避免重复安装或启动第二套实例。检查官方支持文档与已安装 命令行 `--help`，确认当前安装方法、驱动、平台依赖和配置参数。
+3. 未安装时，在已授权目标 工作机 上依当前官方方法安装并验证版本及命令行帮助；不硬编码下载 URL、版本或过时命令。需要额外权限、付费或外部变更时按对应授权流程处理。
+4. 参数化 ENV_DIR（目标环境）、ORIGIN（含协议／主机／端口）、PORT、STATE_DIR、SOCKET，以及另行发现的实际 模型服务 认证配置目录。记录配置来源与实例映射，不把这些占位符当固定路径。只备份非秘密配置差异，不读取凭据内容。
+
+## 二、分层建立基线与验收
+给每层记录时间、环境、操作、观察、结果 通过／失败／待验证 与下一动作；跨日志统一到用户时区并保留原时区来源，避免把不同时刻的状态拼成因果。
+
+| 层 | 实际动作与通过标准 |
+|---|---|
+| 域名解析／TLS／静态资源 | 检查解析、证书、端口、HTML及引用JS/CSS；HTTP200只证明单请求成功，不代表应用就绪 |
+| 浏览器 启动标志／配对页 | 真正打开应用，记录导航到可交互页耗时、控制台、请求瀑布图及失败请求；对齐应用/代理日志时间 |
+| 会话认证 | 区分未配对与会话过期；未认证401或WS失败可能是预期门禁，不能直接归为启动根因 |
+| 来源／协议／会话凭据／WebSocket | 核对实际ORIGIN、http/https与ws/wss、会话凭据作用域/安全属性；合法会话下验证WS101及实际消息，不展示会话凭据值 |
+| 模型服务 | 从T3提交最小无副作用任务，等待任务完成（completed）并核验输出；命令行成功不等于T3成功，所选模型（selected）不等于实际执行模型（executed），executedModel空则不声称已证明执行模型 |
+| 用户终端 | 请用户在实际手机/Mac完成一次使用确认；工作机浏览器通过不替代用户终端通过 |
+
+冷／暖启动分开：冷缓存使用独立临时浏览器上下文或受支持缓存禁用方式，并记录HTTP 缓存、浏览器服务工作线程、已有会话状态与是否重启应用；不要清除用户主会话。随后在相同环境执行暖启动，分别保存脱敏请求瀑布图、控制台与耗时。浏览器冷缓存、服务进程冷启动、宿主恢复不是同一实验。根据请求时序定位资源、初始化、API 或会话阶段，不以泛泛刷新代替排障。
+
+## 三、Tailscale 连接停滞：先归属与持久化路径，再最小恢复
+- 区分宿主网络、控制连接Online:false/连接停滞、应用初始化错误；不能因同时发生就断言同根因。
+- 确认自己的专用守护进程、启动器及客户端套接字。持久STATE_DIR中的--statedir、--state状态文件与--socket要属于同一实例，客户端SOCKET明确匹配；具体参数以版本帮助为准。遇no TailscaleVarRoot先核对缺statedir/目录权限；这一已知故障模式不是所有离线的统一根因。
+- 在授权和归属明确后，备份目标非秘密启动配置，只补证据支持的缺项；必要时仅重启自己的守护进程，保留身份state、不重登、不全局终止进程操作、不影响其他实例。一次只改一个因素，记录前后差异及回退方法。
+- 恢复后实际采样在线状态与控制连接、目标路径及应用状态。预先声明短期窗口与间隔，例如5分钟内每30秒一次（按故障周期调整），报告成功/失败次数、错误及观测范围，不将短期在线称永久稳定。
+
+## 四、主动验证未知项，不伪造睡眠证据
+为每个待验证指定下一项有界实验、成功判据、回退和阻塞条件。权限内继续小范围可逆恢复实验及浏览器冷暖验证；别把待验证当永久限制。
+
+只在自己的目标进程上进行已授权暂停/恢复或重启实验；进程暂停／重启不等于真实整机休眠／恢复。不得为验证睡眠强制影响共享宿主。需要真实恢复证据但暂不可执行时，保存可恢复检查点：版本/非秘密配置、目标进程归属与路径、最近采样时间、恢复后先查项目、继续命令的来源及通过标准。待自然唤醒或获准窗口后继续，准确报告当前恢复、短期采样和真实恢复三者各自结果。
+
+若启动界面后来恢复但初始根因未捕获，仍保留该历史因果未知；补做可复现实验，不从现在成功倒推过去原因。不要重复已通过官方授权或破坏已配对会话来制造测试条件。
+
+## 五、配对秘密交付：以实际文件路径闭环
+完整配对链接是登录秘密，不进聊天、截图、二维码、第三方粘贴服务或公共页面；无秘密/pair入口不是完整配对链接。优先受支持原生工具 CopyFromBox，把权限受限、无第三方资源/遥测的本地私密HTML复制到已确认用户设备。按上下文遵守不执行Mac命令、不使用CloudAgent等运行偏好。
+
+复制成功后返回工具确认的确切落盘路径与真实有效期（用户时区），不猜Downloads/桌面。不得为诊断打开或消费留给用户的一次性码；时效不足或确已失效才重建，不盲目轮换。
+
+如果需要远程桌面交接，先用截图工具 Screenshot安全核实实际前台，再声称私密页已显示；含秘密画面仅本地核实，不转发，也不保存进通用材料。无法安全核实就说明未确认，继续找受支持私密交付能力，不让用户反复寻找未展示的链接。
+
+工具缺失或参数错误时继续发现受支持方式；没有安全交付能力才停秘密交付分支，报告最小必要协助，不用公共第三方粘贴服务兜底。
+
+## 六、Antigravity：先隔离目录，再授权
+1. 用版本及命令行帮助和实际 T3 驱动配置确认目标认证配置目录。需核对的已知映射是：T3 --gemini-dir指向实际认证配置目录、--app-data-dir antigravity-acp，ACP GEMINI_HOME同一实际目录，AGY_ACP_FORCE_FILE_STORAGE=1。按当前驱动支持验证，不硬编码认证配置目录哈希，不把ENV_DIR或app-data-dir猜成认证目录。
+2. 默认HOME中agy 命令行成功不能证明隔离ACP已登录。先查非秘密进程环境、目录映射、存储方式和错误类型；仅修正相关实例，保留Codex及其他模型服务，不读取/复制访问令牌，不改驱动绕隔离。
+3. 只有正确隔离环境确需认证，才按当前版本支持方式，在匹配环境运行官方agy acp --login，而非默认HOME。使用相关登录/凭据处理技能，避免无谓重复官方授权。
+4. 用户只完成必要官方授权/手机确认。优先官方回调或受支持本地标准输入交接，不要求聊天传授权码；用户主动提供的授权码仅用于对应官方流程，不复述、不存文件或日志。成功后先验目标实例；若失败先分辨环境/协议/认证错误再决定是否需要新授权。
+5. 从实时能力列表取可用模型服务和模型，不硬编码案例模型。发起T3内可核验短任务并等待任务完成（completed）；只见所选模型字段 selected或授权成功页不能替代实际输出。executedModel为空时只标执行模型未证实，不否认已观察到的任务输出，也不扩大模型身份声明。
+
+## 七、继续、停止与最终回报
+继续：授权范围内、归属明确、证据支持、可回退的最小修复与实测。普通能力问题继续查官方资料、版本帮助及受支持工具，不因一个参数失败就放弃。
+
+停止对应危险分支：权限/平台安全阻断、未知守护进程归属、要求读取访问令牌或关TLS/认证、无安全秘密交付途径。保留公网鉴权；官方通道被平台出站网络阻断不绕过，报告阻塞；仅用户明确授权才评估受支持Funnel等独立通道。用户说“不设限制”不取消安全边界。只暂停被阻塞分支，其余授权检查继续。
+
+用户干预压到必要官方身份确认、打开私密文件和一次终端确认。最终用5–7行「问题—证据—解决—最佳分诊/验收」表回报，附逐层状态、实际实验范围、仍待验证项及可恢复下一步。未通过不报通过，未执行不报已执行；新验证结果到达后及时更新证据而不是维持过时待验证。
+</pre></details>
+<footer class="muted"><p>本页为可离线打开的自含复盘，不包含公网个人域名、账号、进程号或登录秘密。恢复与采样指标核对本地安全证据；浏览器/模型服务／用户确认依据本次交付提供的实际观察记录。下载请将本页与 SKILL.md 保持同一目录。</p></footer></main></body></html>
