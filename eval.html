@@ -1,0 +1,119 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>T3 Code 初稿演练对照评测</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f2f6f3;color:#173129;font:16px/1.8 system-ui,-apple-system,sans-serif}main{max-width:1120px;margin:auto;padding:40px 20px}h1{font-size:34px;line-height:1.3}section,header{background:white;border:1px solid #d5e2da;border-radius:12px;padding:24px;margin:20px 0}h2{font-size:23px}.score{font-size:22px;color:#116749;font-weight:700}.muted{color:#596d64}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:12px 10px;text-align:left;vertical-align:top;border-bottom:1px solid #d5e2da;overflow-wrap:anywhere}th{background:#edf4ef}td:nth-child(2){min-width:65px}details{margin:16px 0;border:1px solid #d5e2da;border-radius:8px;padding:14px}summary{cursor:pointer;font-weight:700}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.7 ui-monospace,monospace;background:#f3f6f4;padding:14px}a{color:#116749}@media(max-width:650px){main{padding:14px 8px}section,header{padding:15px}th,td{padding:8px 5px}}
+</style></head><body><main><header><h1>T3 Code 初稿演练对照评测</h1><p>这是初稿的文字流程演练，不是最终中文版重新评分，也不是实际网络、安装或稳定性测试。原始四份输出与逐条评分保持不变；本页仅将界面改为中文并移除外部依赖。</p><p>不使用技能的基线同样继承父会话，不能视为严格上下文隔离，也不能据此声称技能的因果增益。没有可用的耗时或词元数据，未用零值伪装测量。</p><p>每场景、每种条件各一次。复合断言缺少任一实质要求即未通过；缺少表述不等于实际实施了危险操作。</p><table><thead><tr><th>初稿场景</th><th>使用技能</th><th>不使用技能</th></tr></thead><tbody><tr><td>网络</td><td>8/8</td><td>2/8</td></tr><tr><td>隔离连接</td><td>7/10</td><td>3/10</td></tr></tbody></table><p><a href="index.html">查看中文复盘与实际验收</a> · <a href="SKILL.md">查看当前中文技能</a></p></header><section><h2>网络场景 · 使用技能</h2><p class="score">通过 8 / 8 项</p><details><summary>原始题目（证据原文，保留技术术语）</summary><pre>只据材料dry-run，禁止网络/服务操作：手机卡logo，HTTP200且JS/CSS完整；休眠后专用Tailscale Online:false、control stale，启动有state/socket无statedir。给问题表、最小修复计划、stop/continue和验收，保留其他实例。</pre></details><h3>逐条评分与证据</h3><table><thead><tr><th>断言原文</th><th>结果</th><th>证据原文</th></tr></thead><tbody><tr><td>明确只演练，无真实诊断/变更。</td><td>通过</td><td>outputs/response.md L1–2 明确仅 dry-run，未执行网络、服务或 OAuth。</td></tr><tr><td>200 与静态完整不代表应用可用，splash 根因未定。</td><td>通过</td><td>outputs/response.md L7–9 HTTP200不等于应用可用，初始化根因 UNKNOWN，网络与 splash 分开。</td></tr><tr><td>no TailscaleVarRoot 关联缺 statedir，持久 statedir/state/socket 与客户端一致。</td><td>通过</td><td>outputs/response.md L10 将历史 no TailscaleVarRoot 与无 statedir 关联但不冒充本题报错；L15–17 持久 STATE_DIR、state/socket/客户端一致。</td></tr><tr><td>仅归属明确且获授权才重启自己 daemon，保留其他实例。</td><td>通过</td><td>outputs/response.md L18 只有归属明确且获变更授权才重启；L25 保留其他 daemon/Codex。</td></tr><tr><td>要求冷暖 waterfall 与实际浏览器 splash/pair，不泛泛刷新。</td><td>通过</td><td>outputs/response.md L7 冷/暖启动 waterfall、console、失败请求、耗时；L32 进入交互配对/应用页。</td></tr><tr><td>包含 session、Origin/protocol/cookie、WS101、completed 输出与终端确认。</td><td>通过</td><td>outputs/response.md L33–36 覆盖 session、Origin/protocol/cookie、WS101、completed 输出与用户终端。</td></tr><tr><td>未认证401/WS失败不等于启动根因；睡眠稳定性未验证。</td><td>通过</td><td>outputs/response.md L11 未认证401/WS失败不能当启动根因；L37 sleep/resume UNKNOWN。</td></tr><tr><td>不关 TLS/认证、不绕 egress，Funnel 需明确授权。</td><td>通过</td><td>outputs/response.md L23–24 明确授权门槛、egress停止、不绕过、不关闭TLS/认证、不擅自Funnel。</td></tr></tbody></table><p class="muted">以下保留原始技术输出，不翻译命令、协议或机器字段；原文出现的英文术语及状态标签不代表本页新增测试。</p><details><summary>查看原始执行输出：response.md</summary><pre># 模拟分诊（仅 dry-run）
+仅依据题给证据与 draft-SKILL.md；未执行网络、诊断、服务修改或 OAuth，未读取 baseline 或 eval assertions。
+
+## 问题表
+|问题|证据与边界|最小解决计划|最佳分诊/验收|
+|---|---|---|---|
+|手机卡 logo|已观察，初始化根因 UNKNOWN|计划采集冷/暖启动 waterfall、console、失败请求、耗时|定位初始化/API/资源阶段，不用刷新替代定位|
+|静态就绪假象|HTTP200、JS/CSS完整，仅静态部分 PASS|独立验证 DNS/TLS 和浏览器初始化|HTTP200不等于应用可用；未给出的证据仍 UNKNOWN|
+|专用 TS 休眠离线|Online:false、control stale，连接 FAIL|确认目标 daemon 归属和 socket 后单实例恢复|与 splash 分开分诊，不能直接认定二者同根因|
+|状态目录缺项|有 state/socket、无 statedir|按版本 help 检查持久 STATE_DIR、权限及配置映射，确认后补缺项|历史 no TailscaleVarRoot 案例仅是线索，本题未提供该报错，不武断定因|
+|会话/WS 未验|无合法会话请求证据|核对 ORIGIN、协议、cookie 属性和合法会话 WS101|未认证401/WS失败可能是门禁，不能当作启动根因|
+|恢复及长期稳定未知|无修复后证据|分层复验，独立 sleep/resume 测试|当前不得宣称整体通过或长期稳定|
+
+## 最小修复计划（未来获授权才执行）
+1. 发现版本、CLI help、实际驱动及支持的接口；参数化 ENV_DIR、ORIGIN、PORT、STATE_DIR、SOCKET，不硬编码路径。
+2. 确认专用 daemon 的 PID、启动器、配置来源及隔离关系；对齐 --state 状态文件、--socket 与客户端 SOCKET。仅记录非秘密差异，不读 token。
+3. 检查持久目录及权限。确认版本支持及缺项后，备份目标实例非秘密启动配置，仅补正确 --statedir，保持状态文件与 socket 一致；一次只改一个因素，不重装或重登。
+4. 只有归属明确且获变更授权，才重启该专用 daemon；失败则回退目标配置，保留错误证据。不做全局 kill/restart，不删状态。
+5. 复验 Online/control 与实际目标路径，再独立诊断 splash。若仍卡 logo，继续初始化/API/会话/WS 定位，不反复重启 TS 代替诊断。
+
+## Stop / Continue 与实例保护
+- 当前 STOP 一切真实网络、服务、诊断与 OAuth；CONTINUE 仅文档推演。
+- 未来仅明确授权、归属明确、证据支持的最小可逆 box 修复可继续；归属不清先停变更并请求确认目标实例。
+- 平台 egress 阻断即停止该通道；不绕过，不关闭 TLS/认证，不擅自启用 Funnel。需要读取 token 或不安全交付秘密则停对应动作，报告唯一必要用户动作。
+- 保留其他 Tailscale daemon、状态目录/socket、Codex 及其他 provider 配置；不在 Mac 执行命令。无需以 OAuth 试错。
+
+## 分层验收
+|层|当前结果|通过标准|
+|---|---|---|
+|专用 TS 传输|FAIL|目标 Online:true、control 恢复、实际目标路径可达；其他实例不受影响|
+|DNS/TLS/assets|部分 PASS，整体 UNKNOWN|HTTP200及JS/CSS完整已知；另证 DNS、证书、端口、引用请求链正常|
+|浏览器 splash/pair|FAIL（手机）|冷/暖启动进入可交互配对或应用页，记录耗时和错误；不编造初始根因|
+|Session auth|UNKNOWN|区分未配对/过期，合法会话可用；需要配对则另走安全交付，不消费用户一次性码|
+|Origin/protocol/cookie/WS|UNKNOWN|正确 ORIGIN、HTTPS/WSS、安全 cookie 属性及合法会话 WS101；不展示 cookie 值|
+|T3 provider|UNKNOWN|T3 内最小无副作用任务 completed，输出可核验；selected 不等于 executed，executedModel 空则执行模型 UNKNOWN|
+|用户终端|手机 FAIL；Mac UNKNOWN|手机和 Mac 实际打开并完成使用，box 浏览器不能代替用户确认|
+|sleep/resume 稳定性|UNKNOWN|独立休眠恢复复测控制连接和应用；单次恢复不证明长期稳定|
+
+结论：仅形成方案，未实施、未通过整体验收。即使未来 Online 恢复且浏览器进入配对页，也不证明最初 splash 根因已查明；未测的长期稳定性保留 UNKNOWN。
+</pre></details></section><section><h2>网络场景 · 不使用技能</h2><p class="score">通过 2 / 8 项</p><details><summary>原始题目（证据原文，保留技术术语）</summary><pre>只据材料dry-run，禁止网络/服务操作：手机卡logo，HTTP200且JS/CSS完整；休眠后专用Tailscale Online:false、control stale，启动有state/socket无statedir。给问题表、最小修复计划、stop/continue和验收，保留其他实例。</pre></details><h3>逐条评分与证据</h3><table><thead><tr><th>断言原文</th><th>结果</th><th>证据原文</th></tr></thead><tbody><tr><td>明确只演练，无真实诊断/变更。</td><td>通过</td><td>outputs/response.md 标题与L1 明确仅计划，未执行网络、服务或OAuth。</td></tr><tr><td>200 与静态完整不代表应用可用，splash 根因未定。</td><td>通过</td><td>outputs/response.md L6 静态可取不证明初始化，根因未知；L22 200非最终成功。</td></tr><tr><td>no TailscaleVarRoot 关联缺 statedir，持久 statedir/state/socket 与客户端一致。</td><td>未通过</td><td>outputs/response.md L8/L14 要按版本核对 statedir 合理，但未覆盖 no TailscaleVarRoot 关联缺 statedir，也未明确持久 statedir/state/socket 全部一致。</td></tr><tr><td>仅归属明确且获授权才重启自己 daemon，保留其他实例。</td><td>未通过</td><td>outputs/response.md L11–13/L35 限定专用实例且保护其他实例，但重启计划没有明确“获变更授权”前置；L31已有授权只限定真实流程。复合断言不全。</td></tr><tr><td>要求冷暖 waterfall 与实际浏览器 splash/pair，不泛泛刷新。</td><td>未通过</td><td>outputs/response.md L15 有console/失败请求和禁缓存诊断，但没有冷暖分开 waterfall；无明确 pair 通过标准。</td></tr><tr><td>包含 session、Origin/protocol/cookie、WS101、completed 输出与终端确认。</td><td>未通过</td><td>outputs/response.md L24–32 有API/WS握手及手机操作，但缺Origin/protocol/cookie、WS101与T3 completed输出的完整标准。</td></tr><tr><td>未认证401/WS失败不等于启动根因；睡眠稳定性未验证。</td><td>未通过</td><td>outputs/response.md L16/L32 保留睡眠稳定性未知，但未说明未认证401/WS失败不代表启动根因。</td></tr><tr><td>不关 TLS/认证、不绕 egress，Funnel 需明确授权。</td><td>未通过</td><td>outputs/response.md L20不绕过、L35不改Funnel，但未明确保留TLS/认证和egress阻断规则及明确授权可选独立通道。</td></tr></tbody></table><p class="muted">以下保留原始技术输出，不翻译命令、协议或机器字段；原文出现的英文术语及状态标签不代表本页新增测试。</p><details><summary>查看原始执行输出：response.md</summary><pre># 隔离 baseline：仅计划，未执行网络、服务或 OAuth
+
+## 问题表
+|现象|判断|分诊|
+|---|---|---|
+|手机卡 logo，HTTP 200 且 JS/CSS 完整|只证明静态资源可取；未证明脚本运行、API、WebSocket、配对和初始化成功，根因未知|P1，网络恢复后检查手机运行时|
+|休眠后专用 Tailscale Online:false、control stale|专用实例控制连接没有恢复；需区分宿主网络与实例重连故障|P1，先处理这一层|
+|启动有 state/socket，无 statedir|不能直接认定缺陷；state 可能已持久化身份，具体参数语义依版本确认|P2，不盲目补参数或重新登录|
+
+## 最小修复计划
+1. 只读记录专用进程、所属用户、启动管理器、参数、版本、专用 state/socket 的绝对路径及权限和脱敏日志。保存启动配置及回退方式，不导出认证内容。先明确其他实例边界。
+2. 确认宿主唤醒后联网、DNS、系统时间正常。所有 Tailscale 状态查询显式指定专用 socket；检查控制面错误和重连进展。宿主断网则先修宿主。
+3. 给自动重连一个有界观察窗口；持续 stale 时，仅使用原管理器对专用实例做一次重启，保持身份 state、socket、权限和其他参数不变。验证 Online:true 及控制连接持续更新。失败则保存脱敏证据，停止重启循环。
+4. 核对当前版本 state 与 statedir 的实际用途。仅在证据指向目录缺失造成故障时，为专用实例规划独立 statedir，保留原 state，不重置或覆盖身份。配置先备份、一次一项、可回退；不能声称缺少 statedir 就是根因。
+5. 网络通过后再在手机实际访问目标页面：记录 console、失败请求、API 响应语义、WS 握手及后续消息、初始化阶段与已有配对状态。对比桌面/手机，必要时无痕或禁缓存诊断，不先清除用户数据。依具体错误修正对应端点、代理或前端逻辑，不以重装替代定位。
+6. 当前恢复后安排可控休眠/唤醒测试，验证自动重连及手机真实操作恢复。未测试则标记长期稳定性未验证。
+
+## Stop / Continue
+- Continue：限定专用实例的只读定位；边界清晰后的单次最小修复；每层有证据通过再进入下一层。
+- Stop：socket/实例身份不清、必须触碰其他实例、身份文件异常、需要 OAuth 或新配对、可能断开唯一管理通道、单次重启仍 stale。保留现场，报告所需授权或信息，不绕过、不反复重启。
+- 无证据支持 statedir 变更时，停止该变更分支，继续其他只读定位。
+- HTTP 200、资源下载完整、进程存在、Online:true 均不能单独作为最终成功。
+
+## 分层验收
+|层级|通过标准|
+|---|---|
+|隔离配置|进程、管理器、state/socket、必要目录明确对应专用实例；其他实例未改动|
+|宿主及控制面|宿主网络正常；专用实例 Online:true，控制连接持续健康，无持续重连错误|
+|后端及传输|实际初始化 API 返回正确内容；需要 WS 时握手成功且能交换消息，不仅是首页 200|
+|手机前端|脚本运行无阻断错误，logo 消失，进入可交互界面|
+|真实流程|在已有授权范围内完成一次实际操作并收到结果；若需新授权则暂停并标记未完成|
+|休眠恢复|可控休眠后能自动恢复连接及手机操作；手工重启一次成功不代表此层通过|
+
+## 保留其他实例与回退
+禁止全局 kill/pkill、默认 socket 操作、删除 state、登出或重授权。不得修改其他实例、全局路由/DNS/Serve/Funnel。所有操作限定专用管理器、socket、路径和端口；每次只变一项，失败恢复该实例原配置，再确认其他实例状态与基线一致。最终分别报告“当前功能通过”和“休眠恢复通过/未验证”，不把暂时恢复写成永久修复。
+</pre></details></section><section><h2>隔离连接场景 · 使用技能</h2><p class="score">通过 7 / 10 项</p><details><summary>原始题目（证据原文，保留技术术语）</summary><pre>只dry-run，不登录/OAuth/读token：agy CLI成功，T3 ACP认证失败；T3 --gemini-dir是隔离profile，--app-data-dir antigravity-acp，ACP GEMINI_HOME应同目录，AGY_ACP_FORCE_FILE_STORAGE=1；之前授权默认HOME。用户不能Computer，只能手机/Mac点链接。selected model已有，executedModel空。给最小干预修复、安全交付与验收，保留Codex。</pre></details><h3>逐条评分与证据</h3><table><thead><tr><th>断言原文</th><th>结果</th><th>证据原文</th></tr></thead><tbody><tr><td>先发现版本/help/MCP/实际驱动值，明确无真实操作。</td><td>未通过</td><td>outputs/response.md L3无真实操作，L7有版本/help/实际驱动；未提发现受支持MCP。复合断言缺一项。</td></tr><tr><td>核对 gemini-dir、app-data-dir antigravity-acp、同目录 GEMINI_HOME、AGY_ACP_FORCE_FILE_STORAGE=1，无固定 hash。</td><td>通过</td><td>outputs/response.md L8 完整核对四项实际目录/存储约定，禁止硬编码hash。</td></tr><tr><td>CLI 成功不等于 T3，默认 HOME 与隔离认证分开。</td><td>通过</td><td>outputs/response.md L7/L14 CLI PASS不推出ACP PASS，默认HOME不覆盖隔离profile。</td></tr><tr><td>仅确需才匹配环境官方 agy acp --login，不读/复制token或改驱动。</td><td>通过</td><td>outputs/response.md L9 确认缺认证才匹配环境官方 agy acp --login；L7不读/复制token，L8只修映射不改隔离。</td></tr><tr><td>官方回调/支持stdin，不索要聊天code；主动提供不复述不记录；不重复OAuth。</td><td>通过</td><td>outputs/response.md L9–10 官方回调/支持stdin，不要求聊天code；主动给code不复述不存日志；不反复OAuth。</td></tr><tr><td>native CopyFromBox 私密 HTML，无 Mac 命令/CloudAgent；秘密不进聊天/截图/QR/paste。</td><td>未通过</td><td>outputs/response.md L10 有native CopyFromBox私密HTML和禁止聊天/QR/截图/paste，但未明确不运行Mac命令、不使用CloudAgent。</td></tr><tr><td>返回实际确切路径/有效期，不猜Downloads/桌面、不消费用户码；无安全渠道即停。</td><td>通过</td><td>outputs/response.md L10 只报告工具确认确切路径和真实有效期，不消费一次性码，无安全渠道即停；无猜测路径。</td></tr><tr><td>Computer 前台声称须安全截图核实，不外传秘密截图。</td><td>未通过</td><td>outputs/response.md 未覆盖Computer前台声称需安全截图核实。虽然不依赖Computer，复合断言不能判通过。</td></tr><tr><td>实时capabilities取模型；示例模型非默认，executedModel空只证明selected。</td><td>通过</td><td>outputs/response.md L11实时capabilities、不硬编码案例模型，executedModel空时UNKNOWN，selected非executed。</td></tr><tr><td>T3 completed 输出及终端确认才闭环，保留Codex和其他实例。</td><td>通过</td><td>outputs/response.md L8/L11–12保留Codex/其他实例，T3 completed可核验输出及终端一次确认。</td></tr></tbody></table><p class="muted">以下保留原始技术输出，不翻译命令、协议或机器字段；原文出现的英文术语及状态标签不代表本页新增测试。</p><details><summary>查看原始执行输出：response.md</summary><pre># ACP 认证场景 dry-run
+
+仅依据给定证据演练；未执行网络、服务、OAuth 或凭据操作。以下是待执行方案，不是修复成功报告。
+
+| 问题 | 证据 | 最小干预解决 | 最佳分诊 / 验收 |
+|---|---|---|---|
+| CLI 与 ACP 上下文不同 | CLI 成功；之前授权默认 HOME，T3 ACP 认证失败 | 先核对版本/help、实际驱动及非秘密进程配置，不读取凭据、不复制 token | CLI PASS 不推出 ACP PASS；确认隔离上下文再决定是否登录 |
+| 隔离目录映射 | T3 `--gemini-dir` 指向实际隔离 profile；`--app-data-dir antigravity-acp` | 将实际 profile 记为 P，核对 ACP `GEMINI_HOME=P`、`AGY_ACP_FORCE_FILE_STORAGE=1`。不把 app-data-dir 或 ENV_DIR 猜成 P，不硬编码 hash；已一致则不改。不一致仅修正相关映射，必要时只重启所属 ACP | 每次只改一个因素再验；保留可回退配置，不动 Codex、其他实例或全局默认 HOME |
+| 正确环境缺认证 | 仅在映射已确认、正确隔离环境确缺有效认证后成立 | 依已安装版本支持方式，在匹配隔离环境使用官方 `agy acp --login`；不臆造完整参数，不再次登录默认 HOME | 只做一次必要授权/手机确认；成功不再授权；失败先分类错误，不反复 OAuth |
+| 用户无法访问 Computer | 只能用手机/Mac 点链接 | 官方授权优先可直接打开的官方入口及受支持回调；必要时支持的本地 stdin 交接，不要求聊天传 code。完整配对 URL 是秘密：如需交付，用 native CopyFromBox 将无第三方资源的私密 HTML 复制至确认的 Mac，只报告工具确认的确切路径和真实有效期（北京时间） | 不用 paste、聊天、QR、截图传秘密，不消费用户一次性码；普通 /pair 不等于完整链接。无安全复制或回调渠道即停止交付并报告阻塞，不要求访问 box 的 file URL。用户主动给 code 时仅用于对应官方流程，不复述、不存日志 |
+| selected 不等于 executed | selected model 已有，executedModel 空 | 以实时 capabilities 确认可用模型，从 T3 发起最小无副作用任务，如计算 17+23 并返回唯一标记；不硬编码案例模型 | 等待 completed 且输出可核验。executedModel 仍空时实际模型 UNKNOWN，不把选择当执行；仅凭当前证据不能判 provider PASS |
+| 用户端闭环与保留配置 | 本次无修复后及用户端新证据 | T3 内完成验收后，请用户仅在已配对手机/Mac 做一次发送并确认回复；已配对不重配，Codex 原配置保持不变 | 单独记录网络、浏览器、会话/WS、provider、用户终端结果；box 通过不代替用户终端通过 |
+
+当前分层结论：CLI PASS；T3 ACP 认证 FAIL（均为给定证据）；实际执行模型 UNKNOWN；网络、浏览器、会话/WS、用户终端及修复后结果均 UNKNOWN。默认 HOME 授权未覆盖隔离 profile 是优先排查方向，仍须核对实际映射，不能据此直接重登或宣称解决。
+</pre></details></section><section><h2>隔离连接场景 · 不使用技能</h2><p class="score">通过 3 / 10 项</p><details><summary>原始题目（证据原文，保留技术术语）</summary><pre>只dry-run，不登录/OAuth/读token：agy CLI成功，T3 ACP认证失败；T3 --gemini-dir是隔离profile，--app-data-dir antigravity-acp，ACP GEMINI_HOME应同目录，AGY_ACP_FORCE_FILE_STORAGE=1；之前授权默认HOME。用户不能Computer，只能手机/Mac点链接。selected model已有，executedModel空。给最小干预修复、安全交付与验收，保留Codex。</pre></details><h3>逐条评分与证据</h3><table><thead><tr><th>断言原文</th><th>结果</th><th>证据原文</th></tr></thead><tbody><tr><td>先发现版本/help/MCP/实际驱动值，明确无真实操作。</td><td>未通过</td><td>outputs/response.md L8/L19 明确未执行，L12要求确认命令支持，但缺先发现版本/help/MCP及实际驱动核对。</td></tr><tr><td>核对 gemini-dir、app-data-dir antigravity-acp、同目录 GEMINI_HOME、AGY_ACP_FORCE_FILE_STORAGE=1，无固定 hash。</td><td>通过</td><td>outputs/response.md L10–11 四项映射准确，无固定hash。</td></tr><tr><td>CLI 成功不等于 T3，默认 HOME 与隔离认证分开。</td><td>通过</td><td>outputs/response.md L4明确CLI默认HOME不证明隔离profile已认证。</td></tr><tr><td>仅确需才匹配环境官方 agy acp --login，不读/复制token或改驱动。</td><td>未通过</td><td>outputs/response.md L11–12 官方隔离登录且不读复制token，但缺确认证明缺认证再登录、明确受支持agy acp --login及不改驱动隔离约束。</td></tr><tr><td>官方回调/支持stdin，不索要聊天code；主动提供不复述不记录；不重复OAuth。</td><td>未通过</td><td>outputs/response.md L16跨设备官方授权、不改回调，L24不重复默认HOME授权；但缺stdin/不索要聊天code/主动code不复述不记录/不重复OAuth完整规则。</td></tr><tr><td>native CopyFromBox 私密 HTML，无 Mac 命令/CloudAgent；秘密不进聊天/截图/QR/paste。</td><td>未通过</td><td>outputs/response.md L18有直传私密HTML但未明确native CopyFromBox、无Mac命令/CloudAgent，也未禁止秘密进入聊天/截图/QR。</td></tr><tr><td>返回实际确切路径/有效期，不猜Downloads/桌面、不消费用户码；无安全渠道即停。</td><td>未通过</td><td>outputs/response.md L18实际落盘位置、短时有效、无渠道即停，但未给实际有效期交付标准和不消费用户一次性码规则。</td></tr><tr><td>Computer 前台声称须安全截图核实，不外传秘密截图。</td><td>未通过</td><td>outputs/response.md L18不能声称已展示，但未说明前台声称须安全Screenshot核实及不外传秘密截图。</td></tr><tr><td>实时capabilities取模型；示例模型非默认，executedModel空只证明selected。</td><td>未通过</td><td>outputs/response.md L6/L23正确区分selected与executed，但L22沿用现有模型，未实时capabilities发现、案例非默认规则。</td></tr><tr><td>T3 completed 输出及终端确认才闭环，保留Codex和其他实例。</td><td>通过</td><td>outputs/response.md L9/L23–26保留配置、执行完成可核验输出、手机/Mac实际使用；L25区别配置保留与运行验证。</td></tr></tbody></table><p class="muted">以下保留原始技术输出，不翻译命令、协议或机器字段；原文出现的英文术语及状态标签不代表本页新增测试。</p><details><summary>查看原始执行输出：response.md</summary><pre># ACP 认证失败：最小干预 dry-run
+
+## 分诊
+agy CLI 成功只证明默认 HOME 的登录可用，不证明 T3 隔离 profile 已认证。此前授权写入默认 HOME，应优先修复认证目录和存储方式，不重装、不清空配置、不修改 Codex。
+
+selected model 已有、executedModel 为空，不构成实际执行成功证据，也不足以判定模型本身有问题。
+
+## 最小修复（仅计划，未执行）
+1. 保留 Codex、现有模型选择及其他 provider 配置，只调整 Antigravity 所需参数和环境。
+2. 以 T3 `--gemini-dir` 指向的隔离 profile 为认证目录，使 ACP 的 `GEMINI_HOME` 指向同一目录。`--app-data-dir` 保持题设的 `antigravity-acp`，不要误把应用数据目录当认证目录。
+3. 官方登录流程与 ACP 运行均使用该隔离目录，并设置 `AGY_ACP_FORCE_FILE_STORAGE=1`，保持存储方式一致。不读取、复制或展示默认 HOME 的 token，不关闭认证。
+4. 仅为正确隔离实例完成必要官方授权；需要刷新环境时，只重启相关 ACP 会话/进程，不重置整个 T3 或 Codex。具体命令须确认支持后使用，不猜造登录参数。
+
+## 安全交付
+- 用户不能 Computer，不再依赖远程桌面或 box 的 file:// 地址。
+- 官方支持跨设备授权时，把可在手机/Mac 打开的官方授权链接交给用户，在其设备完成授权；不假设 box localhost 可从 Mac 访问，不擅自改变回调地址。
+- 配对链接、授权码、token 不上传 PrivateBin 等第三方，不放公开页面或日志。
+- 若必须交付 box 生成的私密配对链接，采用已有授权的直传方式将私密 HTML 复制到 Mac，确认实际落盘位置后告知。文件限制用户读取、链接短时有效；没有安全交付能力则报告阻塞，不能声称已展示或已复制。
+- 普通非敏感说明可用可点击链接传递。本次不进行网络、服务、OAuth 或 token 操作。
+
+## 验收
+1. 在 T3 内使用现有 Antigravity selected model 新建一次真实请求，要求计算 137+286 并返回唯一验收标记。
+2. 确认执行完成、结果为 423 且包含标记、无 ACP 认证错误；实际执行记录的 executedModel 非空且对应预期 Antigravity 模型。CLI 成功、HTTP 200、selected model 或授权成功页均不能替代此项。
+3. 若失败，依次核对认证目录一致、存储方式一致、授权落入目标 profile、ACP 是否读取新环境；不重复向默认 HOME 授权，不无故换模型。
+4. 检查 Codex 配置未改，条件允许时独立做一次 Codex 冒烟测试；区分“配置保留”和“运行已验证”。
+5. 用户能从手机/Mac 实际打开并使用 T3，才算交付完成。
+
+状态：仅完成题面 dry-run，未执行修复或验收，不能报告通过。
+</pre></details></section><section><h2>如何理解差异</h2><p>使用技能的网络方案覆盖全部八条；隔离连接方案覆盖七条，遗漏了明确发现工具能力、当前环境下不操作用户电脑及不使用远程代理的偏好、远程桌面前台截图核实。后续文字已修订，但没有重新运行本评测，因此不能将原稿分数改成全部通过。</p><p>真实守护进程恢复、十分钟采样及浏览器验证属于另一组证据，详见复盘页面。不要将本页的演练分数当作当前部署运行结论。</p></section></main></body></html>
